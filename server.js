@@ -9,8 +9,8 @@ var cors = require('cors')
 // const viewRoute = require('./routes/view.route');
 // const authRoute = require('./routes/auth.route');
 // const userRoute = require('./routes/user.route');
-// const classRoute = require('./routes/class.route');
-   const subjectRoute = require('./routes/subject.route');
+const subjectRoute = require('./routes/subject.route');
+const questionRoute = require('./routes/question.route');
 
 // const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -34,8 +34,8 @@ app.use(morgan('dev'));
 
 // app.use('/api/v1/auth', authRoute);
 // app.use('/api/v1/users', userRoute);
-// app.use('/api/v1/classes', classRoute);
 app.use('/api/v1/subjects', subjectRoute);
+app.use('/api/v1/questions', questionRoute);
 
 // app.post('/uploads', upload.single('file'), (req, res) => {
 //   const urlPublic = `http://localhost:${port}/uploads/${req.file.filename}`;
