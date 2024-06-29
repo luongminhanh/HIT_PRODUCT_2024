@@ -12,7 +12,7 @@ const userSchema = new Schema(
       unique: true,
       required: true,
     },
-    fullName: {
+    fullname: {
       type: String,
       required: true,
       trim: true,
@@ -26,7 +26,7 @@ const userSchema = new Schema(
       type: Date,
       default: '2000-01-01',
     },
-    isLock: {
+    isLocked: {
       type: Boolean,
       default: false,
     },
