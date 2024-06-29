@@ -1,14 +1,12 @@
+require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 var cors = require('cors')
 
-// const viewRoute = require('./routes/view.route');
-// const authRoute = require('./routes/auth.route');
-// const userRoute = require('./routes/user.route');
-// const classRoute = require('./routes/class.route');
-   const subjectRoute = require('./routes/subject.route');
+const authRoute = require('./routes/auth.route');
+const subjectRoute = require('./routes/subject.route');
 
 // const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -27,12 +25,7 @@ app.use('/uploads', express.static('uploads'));
 
 app.use(morgan('dev'));
 
-// view
-// app.use('/auth', viewRoute);
-
-// app.use('/api/v1/auth', authRoute);
-// app.use('/api/v1/users', userRoute);
-// app.use('/api/v1/classes', classRoute);
+app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/subjects', subjectRoute);
 
 // app.post('/uploads', upload.single('file'), (req, res) => {
