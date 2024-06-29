@@ -1,3 +1,4 @@
+require('dotenv').config();
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,12 +11,13 @@ var cors = require('cors')
 const subjectRoute = require('./routes/subject.route');
 const questionRoute = require('./routes/question.route');
 
-// const upload = require('./middlewares/multer.middleware');
+const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
 // const subjectRoute = require('./middlewares/subject.middleware')
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
+console.log(process.env.PORT);
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/hit-nodejs-2024';
 
 app.use(cors())
@@ -35,13 +37,13 @@ app.use(morgan('dev'));
 app.use('/api/v1/subjects', subjectRoute);
 app.use('/api/v1/questions', questionRoute);
 
-// app.post('/uploads', upload.single('file'), (req, res) => {
-//   const urlPublic = `http://localhost:${port}/uploads/${req.file.filename}`;
-//   res.send({
-//     message: 'File uploaded successfully',
-//     urlPublic,
-//   });
-// });
+app.post('/uploads', upload.single('file'), (req, res) => {
+  const urlPublic = `http://localhost:${port}/uploads/${req.file.filename}`;
+  res.send({
+    message: 'File uploaded successfully',
+    urlPublic,
+  });
+});
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
