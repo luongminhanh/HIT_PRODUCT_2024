@@ -26,7 +26,7 @@ const userSchema = new Schema(
       type: Date,
       default: '2000-01-01',
     },
-    isLock: {
+    isLocked: {
       type: Boolean,
       default: false,
     },
