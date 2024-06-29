@@ -1,4 +1,5 @@
 const User = require('../models/user.model');
+const jwt = require('jsonwebtoken');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
@@ -30,6 +31,42 @@ const register = catchAsync(async (req, res, next) => {
   });
 });
 
+const login = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user || !(await user.isMatchPassword(password))) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Tài khoản hoặc mật khẩu không chính xác');
+  }
+
+  if (user.isLocked) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Tài khoản đã bị khoá');
+  }
+
+  user.password = undefined;
+
+  const accessToken = generateToken({ id: user._id });
+
+  res.status(httpStatus.OK).json({
+    message: 'Đăng nhập thành công',
+    code: httpStatus.OK,
+    data: {
+      user,
+      accessToken,
+    },
+  });
+});
+
+const generateToken = (payload) => {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
+
+  return token;
+};
+
 module.exports = {
   register,
+  login
 };
