@@ -39,6 +39,10 @@ const userSchema = new Schema(
             type: String,
             enum: USER_ROLE_ENUM,
             default: USER_ROLE_ENUM.MEMBER
+        },
+        star:{
+            type: Number,
+            default: 0
         }
     },
     {timestamps: true}
