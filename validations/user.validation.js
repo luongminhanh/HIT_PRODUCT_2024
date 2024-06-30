@@ -1,5 +1,6 @@
 const joi = require('joi');
 const { password } = require('./custorm.validation');
+const { query } = require('express');
 
 const createUser = {
   body: joi.object().keys({
@@ -17,6 +18,15 @@ const createUser = {
   }),
 };
 
+const getUsers = {
+  query: joi.object({
+    sortBy: joi.string(),
+    limit: joi.number().integer(),
+    page: joi.number().integer()
+  })
+}
+
 module.exports = {
   createUser,
+  getUsers
 };
