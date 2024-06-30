@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-var cors = require('cors')
+var cors = require('cors');
 
 const authRoute = require('./routes/auth.route');
 const subjectRoute = require('./routes/subject.route');
@@ -16,7 +16,7 @@ const errorHandler = require('./middlewares/error.middleware');
 const app = express();
 const port = process.env.PORT || 3000;
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/hit-nodejs-2024';
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.set('views', './views');
 app.set('view engine', 'ejs');

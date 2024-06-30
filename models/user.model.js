@@ -46,8 +46,8 @@ const userSchema = new Schema(
     },
     gender: {
       type: String,
-      default: 'Nam'
-    }
+      default: 'Nam',
+    },
   },
   { timestamps: true },
 );

@@ -17,12 +17,12 @@ const testSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: 'Question',
-      }
+      },
     ],
     subject: {
       type: Schema.Types.ObjectId,
       ref: 'Subject',
-    }
+    },
   },
   { timestamps: true },
 );

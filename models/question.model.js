@@ -6,22 +6,22 @@ const questionSchema = new Schema(
   {
     test: {
       type: Schema.Types.ObjectId,
-      ref: 'Test'
+      ref: 'Test',
     },
     subject: {
-        type: Schema.Types.ObjectId,
-        ref: 'Subject' 
+      type: Schema.Types.ObjectId,
+      ref: 'Subject',
     },
     content: {
-        type: String,
-        required: true, 
+      type: String,
+      required: true,
     },
     answers: {
-      type: [String]
+      type: [String],
     },
     correctAnswer: {
-      type: String
-    }
+      type: String,
+    },
   },
   { timestamps: true },
 );

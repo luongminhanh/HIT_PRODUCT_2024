@@ -5,7 +5,7 @@ const objectId = (value, helpers) => {
   return value;
 };
 const password = (value, helpers) => {
-    console.log(value);
+  console.log(value);
   if (value.length < 8) {
     return helpers.message('Mật khẩu phải lớn hơn 8 ký tự');
   }
@@ -16,6 +16,6 @@ const password = (value, helpers) => {
 };
 
 module.exports = {
-    password,
-    objectId
-}
+  password,
+  objectId,
+};

@@ -4,8 +4,7 @@ const subjectController = require('../controllers/subject.controller');
 
 const subjectRoute = express.Router();
 
-subjectRoute.route('/').post(subjectController.createSubject)
-.get(subjectController.getAllSubjects);
+subjectRoute.route('/').post(subjectController.createSubject).get(subjectController.getAllSubjects);
 
 subjectRoute
   .route('/:subjectId')
