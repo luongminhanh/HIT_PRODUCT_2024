@@ -1,3 +1,9 @@
+const objectId = (value, helpers) => {
+  if (!value.match(/^[0-9a-fA-F]{24}$/)) {
+    return helpers.message('"{{#label}}" không đúng định dạng Id');
+  }
+  return value;
+};
 const password = (value, helpers) => {
     console.log(value);
   if (value.length < 8) {
@@ -10,5 +16,6 @@ const password = (value, helpers) => {
 };
 
 module.exports = {
-    password
+    password,
+    objectId
 }

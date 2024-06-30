@@ -6,9 +6,12 @@ const {auth, author} = require('../middlewares/auth.middleware');
 
 const userRoute = express.Router();
 
-userRoute.use(auth, author(['admin']));
-
-userRoute.route('/').post(validate(userValidation.createUser), userController.createUser).get(validate(userValidation.getUsers), userController.getUsers)   
-
+userRoute.route('/').post(auth, author(['admin']),validate(userValidation.createUser), userController.createUser).get(auth, author(['admin', 'member']),validate(userValidation.getUsers), userController.getUsers)   
+userRoute
+    .route('/:userId')
+    .get(auth, author(['admin', 'member']), validate(userValidation.getUserById), userController.getUserById)
+    .put(auth, author(['admin', 'member']), validate(userValidation.updateUserById), userController.updateUserById)
+    .delete(auth, author(['admin', 'member']), validate(userValidation.deleteUserById), userController.deleteUserById)
+    .patch(auth, author(['admin']), validate(userValidation.lockUserById), userController.lockUserById)
 
 module.exports = userRoute;
