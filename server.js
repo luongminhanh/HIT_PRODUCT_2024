@@ -7,6 +7,7 @@ var cors = require('cors')
 
 const authRoute = require('./routes/auth.route');
 const subjectRoute = require('./routes/subject.route');
+const userRoute = require('./routes/user.route');
 
 // const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -26,6 +27,7 @@ app.use('/uploads', express.static('uploads'));
 app.use(morgan('dev'));
 
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/users', userRoute);
 app.use('/api/v1/subjects', subjectRoute);
 
 // app.post('/uploads', upload.single('file'), (req, res) => {
