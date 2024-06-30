@@ -44,6 +44,10 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
+    gender: {
+      type: String,
+      default: 'Nam',
+    },
   },
   { timestamps: true },
 );

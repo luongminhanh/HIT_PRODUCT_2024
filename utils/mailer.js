@@ -2,7 +2,7 @@ require('dotenv').config();
 const nodeMailer = require('nodemailer');
 const mailConfig = require('../config/mail.config');
 
-const sendMail = async(to, subject, htmlContent) => {
+const sendMail = async (to, subject, htmlContent) => {
   const transport = nodeMailer.createTransport({
     host: mailConfig.HOST,
     port: mailConfig.PORT,
@@ -19,11 +19,11 @@ const sendMail = async(to, subject, htmlContent) => {
     subject: subject,
     html: htmlContent,
   };
-  try{
+  try {
     await transport.sendMail(options);
-  }catch(err){
+  } catch (err) {
     console.log(err);
   }
 };
 
-module.exports = {sendMail};
+module.exports = { sendMail };

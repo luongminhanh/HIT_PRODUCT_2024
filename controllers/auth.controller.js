@@ -68,5 +68,5 @@ const generateToken = (payload) => {
 
 module.exports = {
   register,
-  login
+  login,
 };

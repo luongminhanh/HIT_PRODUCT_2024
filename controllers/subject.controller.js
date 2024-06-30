@@ -6,7 +6,6 @@ const catchAsync = require('../utils/catchAsync');
 
 const createSubject = catchAsync(async (req, res, next) => {
   if (req.file) req.body['image'] = req.file.path;
-console.log(req.body);
   const newSubject = await Subject.create(req.body);
 
   res.status(httpStatus.CREATED).json({
@@ -21,7 +20,7 @@ console.log(req.body);
 const getSubjectById = catchAsync(async (req, res, next) => {
   const { subjectId } = req.params;
 
-  const subject = await Subject.findById(subjectId)
+  const subject = await Subject.findById(subjectId);
 
   if (!subject) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found!');
@@ -46,10 +45,7 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
 
   const query = {};
 
-  const subjects = await Subject.find()
-    .limit(limit)
-    .skip(skip)
-    .sort(sort);
+  const subjects = await Subject.find().limit(limit).skip(skip).sort(sort);
 
   const totalResults = await Subject.countDocuments(query);
 

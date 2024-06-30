@@ -3,12 +3,13 @@ const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
-var cors = require('cors')
+var cors = require('cors');
 
 // const viewRoute = require('./routes/view.route');
 // const authRoute = require('./routes/auth.route');
 // const userRoute = require('./routes/user.route');
 const subjectRoute = require('./routes/subject.route');
+const userRoute = require('./routes/user.route');
 const questionRoute = require('./routes/question.route');
 const authRoute = require('./routes/auth.route');
 
@@ -20,8 +21,7 @@ const app = express();
 const port = process.env.PORT || 3002;
 console.log(process.env.PORT);
 const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/hit-nodejs-2024';
-
-app.use(cors())
+app.use(cors());
 app.use(express.json());
 app.set('views', './views');
 app.set('view engine', 'ejs');
@@ -36,6 +36,7 @@ app.use(morgan('dev'));
 // app.use('/api/v1/auth', authRoute);
 // app.use('/api/v1/users', userRoute);
 app.use('/api/v1/auth', authRoute);
+app.use('/api/v1/users', userRoute);
 app.use('/api/v1/subjects', subjectRoute);
 app.use('/api/v1/questions', questionRoute);
 

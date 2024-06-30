@@ -17,10 +17,12 @@ const subjectSchema = new Schema(
       type: String,
       default: 'https://th.bing.com/th/id/OIP.z3fa8PjEnvzg4bhW61tEOwAAAA?rs=1&pid=ImgDetMain',
     },
-    questions: [{
-      type: Schema.Types.ObjectId,
-      ref: 'Question',
-    }]
+    questions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Question',
+      },
+    ],
   },
   { timestamps: true },
 );

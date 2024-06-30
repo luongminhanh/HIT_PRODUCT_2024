@@ -12,7 +12,7 @@ const subjectSchema = new Schema(
     isCorrect: {
       type: Boolean,
       required: true,
-    }
+    },
   },
   { timestamps: true },
 );
