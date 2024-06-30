@@ -5,7 +5,8 @@ const Subject = require('../models/subject.model');
 const catchAsync = require('../utils/catchAsync');
 
 const createSubject = catchAsync(async (req, res, next) => {
-
+  if (req.file) req.body['image'] = req.file.path;
+console.log(req.body);
   const newSubject = await Subject.create(req.body);
 
   res.status(httpStatus.CREATED).json({
@@ -66,6 +67,8 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
 });
 
 const updateSubjectById = catchAsync(async (req, res, next) => {
+  if (req.file) req.body['image'] = req.file.path;
+
   const { subjectId } = req.params;
 
   const updateBody = req.body;
