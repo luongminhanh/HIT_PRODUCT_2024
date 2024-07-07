@@ -1,21 +1,20 @@
 require('dotenv').config();
 const morgan = require('morgan');
+const multer = require('multer');
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 var cors = require('cors');
+const xlsx = require('xlsx');
 
-// const viewRoute = require('./routes/view.route');
-// const authRoute = require('./routes/auth.route');
-// const userRoute = require('./routes/user.route');
 const subjectRoute = require('./routes/subject.route');
 const userRoute = require('./routes/user.route');
 const questionRoute = require('./routes/question.route');
 const authRoute = require('./routes/auth.route');
+const testRoute = require('./routes/test.route');
 
 const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
-// const subjectRoute = require('./middlewares/subject.middleware')
 
 const app = express();
 const port = process.env.PORT || 3002;
@@ -30,15 +29,11 @@ app.use('/uploads', express.static('uploads'));
 
 app.use(morgan('dev'));
 
-// view
-// app.use('/auth', viewRoute);
-
-// app.use('/api/v1/auth', authRoute);
-// app.use('/api/v1/users', userRoute);
 app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/users', userRoute);
 app.use('/api/v1/subjects', subjectRoute);
 app.use('/api/v1/questions', questionRoute);
+app.use('/api/v1/tests', testRoute);
 
 app.post('/uploads', upload.single('file'), (req, res) => {
   const urlPublic = `http://localhost:${port}/uploads/${req.file.filename}`;
@@ -47,6 +42,15 @@ app.post('/uploads', upload.single('file'), (req, res) => {
     urlPublic,
   });
 });
+
+var excelStorage = multer.diskStorage({  
+  destination:(req,file,cb)=>{  
+       cb(null,'./public/excelUploads'); 
+  },
+       filename:(req,file,cb)=>{  
+        cb(null,file.originalname);  
+  }  
+});  
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({

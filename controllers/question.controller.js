@@ -1,8 +1,11 @@
 const httpStatus = require('http-status');
+const xlsx = require('xlsx');
 
 const ApiError = require('../utils/ApiError');
 const Question = require('../models/question.model');
 const catchAsync = require('../utils/catchAsync');
+const Subject = require('../models/subject.model');
+const Test = require('../models/test.model');
 
 const createQuestion = catchAsync(async (req, res, next) => {
 
@@ -57,11 +60,99 @@ const getAllQuestions = catchAsync(async (req, res, next) => {
     code: httpStatus.OK,
     data: {
       questions,
+    },
+    meta: {
       limit: +limit,
       currentPage: +page,
       totalPage: Math.ceil(totalResults / +limit),
       totalResults,
+    }
+  });
+});
+
+const getQuestionsBySubjectId = catchAsync(async (req, res, next) => {
+  const {subjectId} = req.params;
+
+  const subject = await Subject.findById(subjectId);
+
+  console.log({subject});
+
+  if (!subject) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found!');
+  }
+
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+
+  const skip = (+page - 1) * +limit;
+
+  const [field, value] = sortBy.split(':');
+  const sort = { [field]: value === 'asc' ? 1 : -1 };
+
+  const query = { subject: subjectId };
+
+  const questions = await Question.find(query)
+    .limit(limit)
+    .skip(skip)
+    .sort(sort);
+
+  const totalResults = await Question.countDocuments(query);
+
+  res.json({
+    message: 'Get questions of the subject successfully',
+    code: httpStatus.OK,
+    data: {
+      questions,
+      subject
     },
+    meta: {
+      limit: +limit,
+      currentPage: +page,
+      totalPage: Math.ceil(totalResults / +limit),
+      totalResults,
+    }
+  });
+});
+
+const getQuestionsByTestId = catchAsync(async (req, res, next) => {
+  const {testId} = req.params;
+
+  const test = await Test.findById(testId);
+
+  console.log({test});
+
+  if (!test) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Test not found!');
+  }
+
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+
+  const skip = (+page - 1) * +limit;
+
+  const [field, value] = sortBy.split(':');
+  const sort = { [field]: value === 'asc' ? 1 : -1 };
+
+  const query = { test: testId };
+
+  const questions = await Question.find(query)
+    .limit(limit)
+    .skip(skip)
+    .sort(sort);
+
+  const totalResults = await Question.countDocuments(query);
+
+  res.json({
+    message: 'Get questions of the test successfully',
+    code: httpStatus.OK,
+    data: {
+      questions,
+      test
+    },
+    meta: {
+      limit: +limit,
+      currentPage: +page,
+      totalPage: Math.ceil(totalResults / +limit),
+      totalResults,
+    }
   });
 });
 
@@ -107,10 +198,57 @@ const deleteQuestionById = catchAsync(async (req, res, next) => {
   });
 });
 
+const importFile = async (filePath) => {
+  try {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+  
+    const jsonData = xlsx.utils.sheet_to_json(worksheet);
+  
+    const questionsToInsert = jsonData.map(row => {
+      const questionData = {
+        content: row.question, 
+        answers: [row.a, row.b, row.c, row.d], 
+      };
+      switch (row.answer) {
+        case 'a':
+          questionData.correctAnswer = row.a;
+          break;
+        case 'b':
+          questionData.correctAnswer = row.b;
+          break;
+        case 'c':
+          questionData.correctAnswer = row.c;
+          break;
+        case 'd':
+          questionData.correctAnswer = row.d;
+          break;
+        default:
+          questionData.correctAnswer = row.a; 
+          break;
+      }
+  
+      questionData.subject = "66801b92f11b627b76c0aa9e";
+  
+      return questionData;
+    });
+    await Question.insertMany(questionsToInsert);
+    console.log('Questions imported successfully.');
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error importing file.'); 
+  }
+};
+
+
 module.exports = {
   createQuestion,
   getAllQuestions,
   getQuestionById,
   updateQuestionById,
   deleteQuestionById,
+  getQuestionsBySubjectId,
+  getQuestionsByTestId,
+  importFile
 };

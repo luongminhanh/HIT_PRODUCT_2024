@@ -9,7 +9,7 @@ const createSubject = catchAsync(async (req, res, next) => {
   const newSubject = await Subject.create(req.body);
 
   res.status(httpStatus.CREATED).json({
-    mesage: 'Tạo thành công lớp học',
+    message: 'Create subject successfully!',
     code: httpStatus.CREATED,
     data: {
       subject: newSubject,

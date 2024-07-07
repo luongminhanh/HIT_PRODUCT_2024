@@ -6,11 +6,10 @@ const testSchema = new Schema(
   {
     name: {
       type: String,
-      select: false,
       required: true,
     },
     duration: {
-      type: number,
+      type: Number,
       required: true,
     },
     questions: [
