@@ -23,9 +23,8 @@ questionRoute
 
   questionRoute.post('/uploadExcelFile', 
     async (req, res) => {
-      console.log(req)
       try {
-        const filePath = './public' + '/excelUploads/Test.xlsx';
+        const filePath = './public' + '/excelUploads/LSD.xlsx';
 
         await questionController.importFile(filePath); 
         res.json({ message: 'File imported successfully.' }); 

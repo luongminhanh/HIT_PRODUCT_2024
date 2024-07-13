@@ -1,3 +1,4 @@
+const { boolean } = require('joi');
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
@@ -23,6 +24,10 @@ const subjectSchema = new Schema(
         ref: 'Question',
       },
     ],
+    status: {
+      type: Boolean,
+      default: true
+    }
   },
   { timestamps: true },
 );

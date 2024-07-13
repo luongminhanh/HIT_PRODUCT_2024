@@ -20,6 +20,10 @@ const createSubject = catchAsync(async (req, res, next) => {
 const getSubjectById = catchAsync(async (req, res, next) => {
   const { subjectId } = req.params;
 
+  const query = {
+    status: true
+  }
+
   const subject = await Subject.findById(subjectId);
 
   if (!subject) {
@@ -43,9 +47,11 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
   const [field, value] = sortBy.split(':');
   const sort = { [field]: value === 'asc' ? 1 : -1 };
 
-  const query = {};
+  const query = {
+    status: false
+  };
 
-  const subjects = await Subject.find().limit(limit).skip(skip).sort(sort).select('-questions');
+  const subjects = await Subject.find(query).limit(limit).skip(skip).sort(sort).select('-questions');
 
   const totalResults = await Subject.countDocuments(query);
 
@@ -91,17 +97,23 @@ const updateSubjectById = catchAsync(async (req, res, next) => {
 const deleteSubjectById = catchAsync(async (req, res, next) => {
   const { subjectId } = req.params;
 
-  const subjectDel = await Subject.findByIdAndDelete(subjectId);
+  const updateBody = {...req.body, status: false};
 
-  if (!subjectDel) {
+  const subject = await Subject.findById(subjectId);
+
+  if (!subject) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found');
   }
+
+  Object.assign(subject, updateBody);
+
+  subject.save();
 
   res.status(httpStatus.OK).json({
     message: 'Delete subject successfully!',
     code: httpStatus.OK,
     data: {
-      subject: subjectDel,
+      subject: subject,
     },
   });
 });

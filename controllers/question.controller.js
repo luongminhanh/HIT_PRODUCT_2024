@@ -228,7 +228,7 @@ const importFile = async (filePath) => {
           break;
       }
   
-      questionData.subject = "66801b92f11b627b76c0aa9e";
+      questionData.subject = "6692a20f7c1c06c4a3e41f05";
   
       return questionData;
     });
