@@ -16,10 +16,15 @@ const createTest = catchAsync(async (req, res, next) => {
   });
 });
 
-const getTestById = catchAsync(async (req, res, next) => {
+const getTestByTestId = catchAsync(async (req, res, next) => {
   const { testId } = req.params;
 
-  const test = await Test.findById(testId);
+  const test = await Test.findById(testId).populate([
+    {
+      path: 'questions',
+      select: '-subject -createdAt -updatedAt',
+    },
+  ]);;
 
   if (!test) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Test not found!');
@@ -27,6 +32,26 @@ const getTestById = catchAsync(async (req, res, next) => {
 
   res.status(httpStatus.OK).json({
     message: 'Get test successfully!',
+    code: httpStatus.OK,
+    data: {
+      test: test,
+    },
+  });
+});
+
+const getListTestOfASubject = catchAsync(async (req, res, next) => {
+  const { subjectId } = req.params;
+
+  const query = { subject: subjectId };
+
+  const test = await Test.find(query).select('-questions -subject');
+
+  if (!test) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Test not found!');
+  }
+
+  res.status(httpStatus.OK).json({
+    message: 'Get list test of a subject successfully!',
     code: httpStatus.OK,
     data: {
       test: test,
@@ -108,7 +133,8 @@ const deleteTestById = catchAsync(async (req, res, next) => {
 module.exports = {
   createTest,
   getAllTests,
-  getTestById,
+  getTestByTestId,
+  getListTestOfASubject,
   updateTestById,
   deleteTestById,
 };

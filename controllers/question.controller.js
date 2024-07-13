@@ -75,8 +75,6 @@ const getQuestionsBySubjectId = catchAsync(async (req, res, next) => {
 
   const subject = await Subject.findById(subjectId);
 
-  console.log({subject});
-
   if (!subject) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found!');
   }
@@ -93,7 +91,8 @@ const getQuestionsBySubjectId = catchAsync(async (req, res, next) => {
   const questions = await Question.find(query)
     .limit(limit)
     .skip(skip)
-    .sort(sort);
+    .sort(sort)
+    .select('-subject -createdAt -updatedAt');
 
   const totalResults = await Question.countDocuments(query);
 

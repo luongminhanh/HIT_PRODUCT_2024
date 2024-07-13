@@ -45,7 +45,7 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
 
   const query = {};
 
-  const subjects = await Subject.find().limit(limit).skip(skip).sort(sort);
+  const subjects = await Subject.find().limit(limit).skip(skip).sort(sort).select('-questions');
 
   const totalResults = await Subject.countDocuments(query);
 

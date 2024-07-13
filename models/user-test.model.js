@@ -8,12 +8,10 @@ const userTestSchema = new Schema(
     user: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
     },
     test: {
       type: Schema.Types.ObjectId,
       ref: 'Test',
-      required: true,
     },
     score: {
       type: Number,
@@ -34,7 +32,7 @@ const userTestSchema = new Schema(
     },
     exam: [
       {
-        idQues: {
+        questionId: {
           type: Schema.Types.ObjectId,
           ref: 'Question',
         },
