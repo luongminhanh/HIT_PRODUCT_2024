@@ -240,7 +240,6 @@ const importFile = async (filePath) => {
   }
 };
 
-
 module.exports = {
   createQuestion,
   getAllQuestions,
