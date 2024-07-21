@@ -225,11 +225,11 @@ const importFile = async (filePath) => {
           questionData.correctAnswer = row.d;
           break;
         default:
-          questionData.correctAnswer = row.a; 
+          questionData.correctAnswer = row.c; 
           break;
       }
   
-      questionData.subject = "6692a20f7c1c06c4a3e41f05";
+      questionData.subject = "669d93638607c507e77c548c";
   
       return questionData;
     });
