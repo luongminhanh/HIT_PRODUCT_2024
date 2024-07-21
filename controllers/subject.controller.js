@@ -48,7 +48,7 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
   const sort = { [field]: value === 'asc' ? 1 : -1 };
 
   const query = {
-    status: false
+    status: true
   };
 
   const subjects = await Subject.find(query).limit(limit).skip(skip).sort(sort).select('-questions');
