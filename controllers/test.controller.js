@@ -60,7 +60,7 @@ const getListTestOfASubject = catchAsync(async (req, res, next) => {
 });
 
 const getAllTests = catchAsync(async (req, res, next) => {
-  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.query;
 
   const skip = (+page - 1) * +limit;
 

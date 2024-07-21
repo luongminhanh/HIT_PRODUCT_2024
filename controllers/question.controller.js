@@ -39,7 +39,7 @@ const getQuestionById = catchAsync(async (req, res, next) => {
 });
 
 const getAllQuestions = catchAsync(async (req, res, next) => {
-  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.query;
 
   const skip = (+page - 1) * +limit;
 
@@ -79,7 +79,10 @@ const getQuestionsBySubjectId = catchAsync(async (req, res, next) => {
     throw new ApiError(httpStatus.NOT_FOUND, 'Subject not found!');
   }
 
-  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+  console.log({req});
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.query;
+
+  console.log(req.body);
 
   const skip = (+page - 1) * +limit;
 
@@ -117,13 +120,11 @@ const getQuestionsByTestId = catchAsync(async (req, res, next) => {
 
   const test = await Test.findById(testId);
 
-  console.log({test});
-
   if (!test) {
     throw new ApiError(httpStatus.NOT_FOUND, 'Test not found!');
   }
 
-  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.body;
+  const { limit = 10, page = 1, sortBy = 'name : asc' } = req.query;
 
   const skip = (+page - 1) * +limit;
 
