@@ -58,6 +58,30 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const changePassword = catchAsync(async(req, res) => {
+  const user = await User.findById(req.user.id).select("+password");
+
+  if(!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Không tìm thấy người dùng.');
+  }
+
+  if (!(await user.isMatchPassword(req.body.oldPassword))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Mật khẩu cũ không chính xác');
+  }
+
+  Object.assign(user, { password: req.body.newPassword });
+
+  await user.save();
+
+  res.status(httpStatus.OK).json({
+    message: 'Đổi mật khẩu thành công',
+    code: httpStatus.OK,
+    data: {
+      user,
+    },
+  });
+})
+
 const generateToken = (payload) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -69,4 +93,5 @@ const generateToken = (payload) => {
 module.exports = {
   register,
   login,
+  changePassword
 };
