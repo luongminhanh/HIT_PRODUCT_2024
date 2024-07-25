@@ -22,7 +22,20 @@ const login = {
   }),
 };
 
+const changePassword = {
+  body: joi.object({
+    oldPassword: joi.string().required().custom(password),
+    newPassword: joi.string().required().custom(password).not(joi.ref('oldPassword')).messages({
+      'any.invalid': 'Mật khẩu mới không được trùng với mật khẩu cũ',
+    }),
+    repeatPassword: joi.string().min(6).max(30).required().valid(joi.ref('newPassword')).messages({
+      'any.only': 'Mật khẩu nhập lại không khớp',
+    }),
+  }),
+};
+
 module.exports = {
   register,
   login,
+  changePassword
 };
