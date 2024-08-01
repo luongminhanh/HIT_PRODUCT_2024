@@ -4,6 +4,7 @@ const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const mailer = require('../utils/mailer');
+const { cloudinary } = require('../configs/cloudinary.config');
 
 const register = catchAsync(async (req, res, next) => {
   const existingEmail = await User.findOne({ email: req.body.email });
@@ -19,7 +20,6 @@ const register = catchAsync(async (req, res, next) => {
         <div style="font-family: Arial, sans-serif; padding: 20px;">
         <h1 style="color: #333;">Chúc mừng bạn đã đăng ký thành công!</h1>
         <p style="color: #666; font-size: 16px;">Bạn có thể bắt đầu sử dụng ứng dụng của chúng tôi ngay bây giờ.</p>
-        <a href="#" style="display: inline-block; background-color: #007bff; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-size: 14px;">Truy cập ứng dụng</a>
       </div>
     `;
   await mailer.sendMail(to, subject, htmlContent);
@@ -82,6 +82,28 @@ const changePassword = catchAsync(async(req, res) => {
   });
 })
 
+const changeUserProfile = catchAsync(async(req, res) => {
+  const user = await User.findById(req.user.id);
+  
+  Object.assign(user, req.body);
+  
+  const file = req.file;
+  if(file){
+    const avatar = await cloudinary.uploader.upload(file.path);
+    user.avatar = avatar.url;
+  }
+
+  user.save();
+
+  res.status(httpStatus.OK).json({
+    code: httpStatus.OK,
+    message: "Thay đổi thông tin người dùng thành công",
+    data: {
+      user
+    }
+  })
+})
+
 const generateToken = (payload) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE,
@@ -93,5 +115,6 @@ const generateToken = (payload) => {
 module.exports = {
   register,
   login,
-  changePassword
+  changePassword,
+  changeUserProfile
 };
