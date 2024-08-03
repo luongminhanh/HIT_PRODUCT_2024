@@ -46,7 +46,8 @@ const login = catchAsync(async (req, res) => {
 
   user.password = undefined;
 
-  const accessToken = generateToken({ id: user._id });
+  const accessToken = generateToken({ id: user._id }, process.env.JWT_ACCESS_TOKEN_SECRET ,process.env.JWT_ACCESS_TOKEN_EXPIRE);
+  const refreshToken = generateToken({id: user._id}, process.env.JWT_REFRESH_TOKEN_SECRET ,process.env.JWT_REFRESH_TOKEN_EXPIRE)
 
   res.status(httpStatus.OK).json({
     message: 'Đăng nhập thành công',
@@ -54,6 +55,7 @@ const login = catchAsync(async (req, res) => {
     data: {
       user,
       accessToken,
+      refreshToken
     },
   });
 });
@@ -104,13 +106,14 @@ const changeUserProfile = catchAsync(async(req, res) => {
   })
 })
 
-const generateToken = (payload) => {
-  const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRE,
+const generateToken = (payload, secret, expiresIn) => {
+  const token = jwt.sign(payload, (secret || 'incognito'), {
+    expiresIn: (expiresIn || '1s'),
   });
 
   return token;
 };
+
 
 module.exports = {
   register,
