@@ -25,7 +25,7 @@ const questionSchema = new Schema(
   },
   { timestamps: true },
 );
-
+questionSchema.index({content: 'text', correctAnswer: 'text'})
 const Question = mongoose.model('Question', questionSchema);
 
 module.exports = Question;
