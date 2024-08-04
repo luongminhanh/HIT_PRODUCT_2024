@@ -2,16 +2,22 @@ const express = require('express');
 const validate = require('../middlewares/validatre.middleware');
 const postController = require('../controllers/post.controller');
 const postValidation = require('../validations/post.validation');
-const { auth } = require('../middlewares/auth.middleware');
+const { auth, author } = require('../middlewares/auth.middleware');
 const upload = require('../middlewares/multer.middleware');
 
-const userRoute = express.Router();
+const postRoute = express.Router();
 
-userRoute
+postRoute
   .route('/')
-  .post(auth,upload.single('image'), validate(postValidation.createPost), postController.createPost);
-//   .get(auth, validate(userValidation.getUserById), userController.getUserById)
-//   .put(auth, validate(userValidation.updateUserById), upload.single('avatar'), userController.updateUserById)
-//   .delete(auth, validate(userValidation.deleteUserById), userController.deleteUserById)
+  .post(auth, upload.single('image'), validate(postValidation.createPost), postController.createPost)
+  .get(auth, author(['admin']), validate(postValidation.getPosts), postController.getPosts);
 
-module.exports = userRoute;
+postRoute
+  .route('/:postId')
+  .get(auth, validate(postValidation.getPostById), postController.getPostById)
+  .put(auth, upload.single('image'), validate(postValidation.updatePostById), postController.updatePostById)
+  .delete(auth, validate(postValidation.deletePostById), postController.deletePostById)
+
+postRoute.route('/user/:userId').get(auth, validate(postValidation.getPostsByUserId), postController.getPostsByUserId);
+
+module.exports = postRoute;
