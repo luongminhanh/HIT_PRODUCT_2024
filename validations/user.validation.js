@@ -38,17 +38,30 @@ const updateUserById = {
     userId: joi.string().required().custom(objectId),
   }),
   body: joi.object().keys({
-    fullname: joi.string().min(2).max(45).required().messages({
+    fullname: joi.string().min(2).max(45).optional().messages({
+      'string.base': 'Họ tên phải là một chuỗi',
+      'string.min': 'Họ tên phải có ít nhất 2 ký tự',
+      'string.max': 'Họ tên không được vượt quá 45 ký tự',
       'any.required': 'Vui lòng điền họ tên người dùng',
     }),
-    gender: joi.string().required().valid('Nam', 'Nữ'),
-    dateOfBirth: joi.date().max('now').iso().messages({
+    gender: joi.string().optional().valid('Nam', 'Nữ').messages({
+      'any.only': 'Giới tính chỉ có thể là "Nam" hoặc "Nữ"',
+    }),
+    dateOfBirth: joi.date().max('now').iso().optional().messages({
       'date.base': 'Ngày sinh phải là một ngày hợp lệ',
       'date.format': 'Ngày sinh phải có định dạng hợp lệ (YYYY-MM-DD)',
       'date.max': 'Ngày sinh không được lớn hơn thời gian hiện tại',
     }),
-  }),
+    avatar: joi.string().optional(),
+    isLocked: joi.boolean().optional(),
+    role: joi.string().optional().valid('admin', 'member').messages({
+      'any.only': 'Vai trò chỉ có thể là "admin" hoặc "member"',
+    }),
+  }).or('fullname', 'gender', 'dateOfBirth', 'avatar', 'isLocked', 'role').messages({
+    'object.missing': 'Ít nhất một trong các trường fullname, gender, dateOfBirth, avatar, isLocked hoặc role là bắt buộc',
+  })
 };
+
 
 const deleteUserById = {
   params: joi.object({

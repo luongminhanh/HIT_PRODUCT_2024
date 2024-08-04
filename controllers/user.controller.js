@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const User = require('../models/user.model');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
+const { cloudinary } = require('../configs/cloudinary.config');
 
 const createUser = catchAsync(async (req, res) => {
   const existingEmail = await User.findOne({ email: req.body.email });
@@ -68,17 +69,21 @@ const getUserById = catchAsync(async (req, res) => {
 
 const updateUserById = catchAsync(async (req, res) => {
   const user = await User.findById(req.params.userId);
-
   if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, `Không tìm thấy người dùng`);
+    throw new ApiError(httpStatus.NOT_FOUND, 'Không tìm thấy người dùng');
   }
-
   Object.assign(user, req.body);
+
+  const file = req.file;
+  if(file){
+    const avatar = await cloudinary.uploader.upload(file.path);
+    user.avatar = avatar.url;
+  }
 
   await user.save();
 
   res.status(httpStatus.OK).json({
-    message: `Cập nhật thông tin người dùng thành công`,
+    message: 'Cập nhật thông tin người dùng thành công',
     code: httpStatus.OK,
     data: {
       user,

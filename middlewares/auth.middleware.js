@@ -12,11 +12,11 @@ const auth = catchAsync(async (req, res, next) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui lòng đăng nhập hệ thống');
   }
 
-  const payload = jwt.verify(token, process.env.JWT_SECRET);
+  const payload = jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET);
 
   const user = await User.findById(payload.id);
   if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui đăng nhập hệ thống');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui lòng đăng nhập hệ thống');
   }
 
   if (user.isLocked) {

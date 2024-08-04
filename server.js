@@ -12,6 +12,7 @@ const userRoute = require('./routes/user.route');
 const questionRoute = require('./routes/question.route');
 const authRoute = require('./routes/auth.route');
 const testRoute = require('./routes/test.route');
+const postRoute = require('./routes/post.route');
 
 const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -34,6 +35,7 @@ app.use('/api/v1/users', userRoute);
 app.use('/api/v1/subjects', subjectRoute);
 app.use('/api/v1/questions', questionRoute);
 app.use('/api/v1/tests', testRoute);
+app.use('/api/v1/posts', postRoute);
 
 app.post('/uploads', upload.single('file'), (req, res) => {
   const urlPublic = `http://localhost:${port}/uploads/${req.file.filename}`;
