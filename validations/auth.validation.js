@@ -59,7 +59,7 @@ const changeUserProfile = {
       'date.max': 'Ngày sinh không được lớn hơn thời gian hiện tại',
     }),
     avatar: joi.string().optional(),
-  })
+  }).or('fullname', 'gender', 'dateOfBirth', 'avatar')
 }
 
 module.exports = {

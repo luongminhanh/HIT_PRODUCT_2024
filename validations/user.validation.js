@@ -57,7 +57,7 @@ const updateUserById = {
     role: joi.string().optional().valid('admin', 'member').messages({
       'any.only': 'Vai trò chỉ có thể là "admin" hoặc "member"',
     }),
-  })
+  }).or('fullname', 'gender', 'dateOfBirth', 'avatar', 'isLocked', 'role')
 };
 
 

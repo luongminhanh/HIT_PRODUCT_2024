@@ -14,7 +14,7 @@ userRoute
 userRoute
   .route('/:userId')
   .get(auth, author(['admin', 'member']), validate(userValidation.getUserById), userController.getUserById)
-  .put(auth, author(['admin']), validate(userValidation.updateUserById), upload.single('avatar'), userController.updateUserById)
+  .put(auth, author(['admin']), upload.single('avatar'), validate(userValidation.updateUserById), userController.updateUserById)
   .delete(auth, author(['admin', 'member']), validate(userValidation.deleteUserById), userController.deleteUserById)
   .patch(auth, author(['admin']), validate(userValidation.lockUserById), userController.lockUserById);
 
