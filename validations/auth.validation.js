@@ -22,6 +22,14 @@ const login = {
   }),
 };
 
+const refreshToken = {
+  body: joi.object({
+    refreshToken: joi.string().required().messages({
+      'any.required': 'Vui lòng điền refresh token',
+    })
+  })
+}
+
 const changePassword = {
   body: joi.object({
     oldPassword: joi.string().required().custom(password),
@@ -58,5 +66,6 @@ module.exports = {
   register,
   login,
   changePassword,
-  changeUserProfile
+  changeUserProfile,
+  refreshToken
 };

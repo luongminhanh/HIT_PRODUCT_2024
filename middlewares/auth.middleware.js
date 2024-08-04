@@ -16,7 +16,7 @@ const auth = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(payload.id);
   if (!user) {
-    throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui đăng nhập hệ thống');
+    throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui lòng đăng nhập hệ thống');
   }
 
   if (user.isLocked) {

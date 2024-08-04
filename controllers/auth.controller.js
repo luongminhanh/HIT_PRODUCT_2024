@@ -1,10 +1,11 @@
-const User = require('../models/user.model');
+const { cloudinary } = require('../configs/cloudinary.config');
 const jwt = require('jsonwebtoken');
+const User = require('../models/user.model');
 const catchAsync = require('../utils/catchAsync');
 const ApiError = require('../utils/ApiError');
 const httpStatus = require('http-status');
 const mailer = require('../utils/mailer');
-const { cloudinary } = require('../configs/cloudinary.config');
+const {generateAccessToken, generateRefreshToken} = require('../utils/generateTokens')
 
 const register = catchAsync(async (req, res, next) => {
   const existingEmail = await User.findOne({ email: req.body.email });
@@ -46,8 +47,8 @@ const login = catchAsync(async (req, res) => {
 
   user.password = undefined;
 
-  const accessToken = generateToken({ id: user._id }, process.env.JWT_ACCESS_TOKEN_SECRET ,process.env.JWT_ACCESS_TOKEN_EXPIRE);
-  const refreshToken = generateToken({id: user._id}, process.env.JWT_REFRESH_TOKEN_SECRET ,process.env.JWT_REFRESH_TOKEN_EXPIRE)
+  const accessToken = generateAccessToken({ id: user._id });
+  const refreshToken = generateRefreshToken({id: user._id})
 
   res.status(httpStatus.OK).json({
     message: 'Đăng nhập thành công',
@@ -59,6 +60,32 @@ const login = catchAsync(async (req, res) => {
     },
   });
 });
+
+const refreshToken = catchAsync(async(req, res) => {
+  const { refreshToken } = req.body;
+
+  jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN_SECRET, async(err, user) => {
+    if(err){
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui lòng đăng nhập hệ thống');
+    }
+
+    
+    const currentUser = await User.findById(user.id);
+    if (!currentUser) {
+      throw new ApiError(httpStatus.UNAUTHORIZED, 'Vui lòng đăng nhập hệ thống');
+    }
+
+    const accessToken = generateAccessToken({ id: currentUser._id });
+
+    res.status(httpStatus.OK).json({
+      code: httpStatus.OK,
+      message: "Làm mới token thành công",
+      data: {
+        accessToken,
+      }
+    })
+  })
+})
 
 const changePassword = catchAsync(async(req, res) => {
   const user = await User.findById(req.user.id).select("+password");
@@ -106,18 +133,12 @@ const changeUserProfile = catchAsync(async(req, res) => {
   })
 })
 
-const generateToken = (payload, secret, expiresIn) => {
-  const token = jwt.sign(payload, (secret || 'incognito'), {
-    expiresIn: (expiresIn || '1s'),
-  });
-
-  return token;
-};
 
 
 module.exports = {
   register,
   login,
+  refreshToken,
   changePassword,
   changeUserProfile
 };
