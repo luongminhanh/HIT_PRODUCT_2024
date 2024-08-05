@@ -3,6 +3,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const Subject = require('../models/subject.model');
 const catchAsync = require('../utils/catchAsync');
+const Question = require('../models/question.model');
 
 const createSubject = catchAsync(async (req, res, next) => {
   if (req.file) req.body['image'] = req.file.path;
@@ -118,10 +119,38 @@ const deleteSubjectById = catchAsync(async (req, res, next) => {
   });
 });
 
+//user practice by doing questions of a subject and send result, BE send result
+const sendAnswersOfPracticeBySubjectAndGetResult = catchAsync(async (req, res) => {
+  const userAnswer = req.body.practice;
+  console.log(userAnswer);
+
+  const {subjectId, questionId} = req.params;
+
+  const correctAnswersSubject = await Question.find({subject: subjectId}).select('correctAnswer -_id');
+  const ans = correctAnswersSubject.map(item => item.correctAnswer)
+
+  let numberOfCorrectAns = 0;
+  const numberOfQuestion = ans.length;
+
+  for (let i = 0; i<numberOfQuestion; i++) {
+    if (ans[i] === userAnswer[i]?.answer) {
+      numberOfCorrectAns++;
+    }
+  }
+
+  const finalScore = numberOfCorrectAns/numberOfQuestion * 100;
+
+  return res.status(httpStatus.CREATED).json({
+    message: 'Send result  successfully!',
+    finalScore
+  })
+});
+
 module.exports = {
   createSubject,
   getAllSubjects,
   getSubjectById,
   updateSubjectById,
   deleteSubjectById,
+  sendAnswersOfPracticeBySubjectAndGetResult
 };
