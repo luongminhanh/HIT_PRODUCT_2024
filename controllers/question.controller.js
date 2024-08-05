@@ -91,9 +91,9 @@ const getQuestionsBySubjectId = catchAsync(async (req, res, next) => {
   const query = { subject: subjectId };
 
   const questions = await Question.find(query)
-    .limit(limit)
-    .skip(skip)
-    .sort(sort)
+    // .limit(limit)
+    // .skip(skip)
+    // .sort(sort)
     .select('-subject -createdAt -updatedAt');
 
   const totalResults = await Question.countDocuments(query);
@@ -248,5 +248,5 @@ module.exports = {
   deleteQuestionById,
   getQuestionsBySubjectId,
   getQuestionsByTestId,
-  importFile
+  importFile,
 };
