@@ -40,10 +40,6 @@ const userSchema = new Schema(
       enum: USER_ROLE_ENUM,
       default: USER_ROLE_ENUM.MEMBER,
     },
-    star: {
-      type: Number,
-      default: 0,
-    },
     gender: {
       type: String,
       default: 'Nam',

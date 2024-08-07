@@ -12,5 +12,8 @@ authRoute.post('/login', validate(authValidation.login), authController.login);
 authRoute.post('/refresh-token', validate(authValidation.refreshToken), authController.refreshToken);
 authRoute.post('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
 authRoute.put('/change-profile', auth, upload.single('avatar'), validate(authValidation.changeUserProfile), authController.changeUserProfile)
+authRoute.post('/forgot-password', validate(authValidation.sendOtp), authController.sendOtp);
+authRoute.post('/verify-otp', validate(authValidation.verifyOtp), authController.verifyOtp);
+authRoute.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 
 module.exports = authRoute;
