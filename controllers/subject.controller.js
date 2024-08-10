@@ -4,9 +4,15 @@ const ApiError = require('../utils/ApiError');
 const Subject = require('../models/subject.model');
 const catchAsync = require('../utils/catchAsync');
 const Question = require('../models/question.model');
+const { cloudinary } = require('../configs/cloudinary.config');
+
 
 const createSubject = catchAsync(async (req, res, next) => {
-  if (req.file) req.body['image'] = req.file.path;
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    req.body['image'] = result.secure_url;
+  }
+
   const newSubject = await Subject.create(req.body);
 
   res.status(httpStatus.CREATED).json({
@@ -81,7 +87,10 @@ const getAllSubjectsByAdmin = catchAsync(async (req, res, next) => {
 });
 
 const updateSubjectById = catchAsync(async (req, res, next) => {
-  if (req.file) req.body['image'] = req.file.path;
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    req.body['image'] = result.secure_url;
+  }
 
   const { subjectId } = req.params;
 
