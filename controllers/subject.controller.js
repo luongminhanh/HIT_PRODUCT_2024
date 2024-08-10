@@ -69,6 +69,17 @@ const getAllSubjects = catchAsync(async (req, res, next) => {
   });
 });
 
+const getAllSubjectsByAdmin = catchAsync(async (req, res, next) => {
+  const subjects = await Subject.find({});
+  res.json({
+    message: 'Get subjects successfully',
+    code: httpStatus.OK,
+    data: {
+      subjects,
+    },
+  });
+});
+
 const updateSubjectById = catchAsync(async (req, res, next) => {
   if (req.file) req.body['image'] = req.file.path;
 
@@ -152,5 +163,6 @@ module.exports = {
   getSubjectById,
   updateSubjectById,
   deleteSubjectById,
-  sendAnswersOfPracticeBySubjectAndGetResult
+  sendAnswersOfPracticeBySubjectAndGetResult,
+  getAllSubjectsByAdmin
 };

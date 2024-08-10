@@ -13,7 +13,6 @@ subjectRoute
   .route('/:subjectId')
   .get(subjectController.getSubjectById)
   .put(upload.single('image'), subjectController.updateSubjectById)
-  .delete(subjectController.deleteSubjectById)
 
 subjectRoute.route('/:subjectId/practice').post( subjectController.sendAnswersOfPracticeBySubjectAndGetResult)
 

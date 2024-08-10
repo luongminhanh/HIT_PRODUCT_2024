@@ -11,8 +11,10 @@ const createQuestion = catchAsync(async (req, res, next) => {
 
   const newQuestion = await Question.create(req.body);
 
-  res.status(httpStatus.CREATED).json({
-    mesage: 'Create question successfully',
+  await newQuestion.save();
+
+  return res.status(httpStatus.CREATED).json({
+    message: 'Create question successfully',
     code: httpStatus.CREATED,
     data: {
       question: newQuestion,
