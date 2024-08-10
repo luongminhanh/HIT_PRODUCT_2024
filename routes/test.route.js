@@ -13,6 +13,7 @@ testRoute.route('/').post(testController.createTest)
 testRoute
   .route('/:testId')
   .get(testController.getTestByTestId)
+  .put(testController.updateTestById)
   .delete(testController.deleteTestById);
   
 testRoute
