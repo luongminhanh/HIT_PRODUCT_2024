@@ -64,10 +64,58 @@ const changeUserProfile = {
   })
 }
 
+const sendOtp = {
+  body: joi.object().keys({
+    email: joi.string().email().required().messages({
+      'string.email': 'Email không hợp lệ',
+      'string.empty': 'Email không được để trống',
+      'any.required': 'Email là bắt buộc'
+    })
+  })
+};
+
+const verifyOtp = {
+  body: joi.object().keys({
+    email: joi.string().email().required().messages({
+      'string.email': 'Email không hợp lệ',
+      'string.empty': 'Email không được để trống',
+      'any.required': 'Email là bắt buộc'
+    }),
+    otp: joi.string().length(6).required().messages({
+      'string.length': 'Mã OTP phải có độ dài 6 ký tự',
+      'string.empty': 'Mã OTP không được để trống',
+      'any.required': 'Mã OTP là bắt buộc'
+    })
+  })
+};
+
+const resetPassword = {
+  body: joi.object().keys({
+    email: joi.string().email().required().messages({
+      'string.email': 'Email không hợp lệ',
+      'string.empty': 'Email không được để trống',
+      'any.required': 'Email là bắt buộc'
+    }),
+    password: joi.string().min(6).required().messages({
+      'string.min': 'Mật khẩu phải có ít nhất 6 ký tự',
+      'string.empty': 'Mật khẩu không được để trống',
+      'any.required': 'Mật khẩu là bắt buộc'
+    }),
+    confirmPassword: joi.string().valid(joi.ref('password')).required().messages({
+      'any.only': 'Mật khẩu xác nhận không khớp',
+      'string.empty': 'Xác nhận mật khẩu không được để trống',
+      'any.required': 'Xác nhận mật khẩu là bắt buộc'
+    })
+  })
+};
+
 module.exports = {
   register,
   login,
   changePassword,
   changeUserProfile,
-  refreshToken
+  refreshToken,
+  sendOtp,
+  verifyOtp,
+  resetPassword
 };

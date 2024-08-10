@@ -16,6 +16,7 @@ const postRoute = require('./routes/post.route');
 const likeRoute = require('./routes/like.route');
 const commentRoute = require('./routes/comment.route');
 const adminRoute = require('./routes/admin.route');
+const starRoute = require('./routes/star.route');
 
 const upload = require('./middlewares/multer.middleware');
 const errorHandler = require('./middlewares/error.middleware');
@@ -44,6 +45,7 @@ app.use('/api/v1/likes', likeRoute);
 app.use('/api/v1/comments', commentRoute);
 app.use('/api/v1/admin', adminRoute);
 
+app.use('/api/v1/stars',starRoute );
 io.on('connection', (socket) => {
   console.log('a user connected');
 
