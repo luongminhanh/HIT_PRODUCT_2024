@@ -199,7 +199,8 @@ const deleteQuestionById = catchAsync(async (req, res, next) => {
   });
 });
 
-const importFile = async (filePath) => {
+const importFile = async (filePath, subjectId) => {
+  console.log({filePath});
   try {
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
@@ -230,7 +231,7 @@ const importFile = async (filePath) => {
           break;
       }
   
-      questionData.subject = "669d93638607c507e77c548c";
+      questionData.subject = subjectId;
   
       return questionData;
     });
