@@ -209,29 +209,15 @@ const importFile = async (filePath, subjectId) => {
     const jsonData = xlsx.utils.sheet_to_json(worksheet);
   
     const questionsToInsert = jsonData.map(row => {
+      const answers = [row.a, row.b, row.c, row.d];
+      const correctAnswer = answers[Math.floor(Math.random() * answers.length)];
+
       const questionData = {
-        content: row.question, 
-        answers: [row.a, row.b, row.c, row.d], 
+        content: row.question,
+        answers: answers,
+        correctAnswer: correctAnswer,
+        subject: subjectId
       };
-      switch (row.answer) {
-        case 'a':
-          questionData.correctAnswer = row.a;
-          break;
-        case 'b':
-          questionData.correctAnswer = row.b;
-          break;
-        case 'c':
-          questionData.correctAnswer = row.c;
-          break;
-        case 'd':
-          questionData.correctAnswer = row.d;
-          break;
-        default:
-          questionData.correctAnswer = row.c; 
-          break;
-      }
-  
-      questionData.subject = subjectId;
   
       return questionData;
     });
